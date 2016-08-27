@@ -28,6 +28,31 @@ def wall_crawl(link):
 
 	return posts
 
+def tree_crawl(link):
+	r = requests.get(link)
+	page = r.content
+	soup = BeautifulSoup(page, "html.parser")
+
+	allComments = soup.findAll('td', {'class':'default'})
+
+	postings = [comments for comments in allComments]
+	posts = []
+
+	for post in postings: 
+		re1='.*?'	# Non-greedy match on filler
+		re2='(Toronto)'	# Word 1
+
+		rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
+		m = rg.search(post)
+
+		if m:
+			#posts.append(m.group(1))
+			posts.append(post)
+
+	print "total items: ", len(posts)
+
+	return posts
+
 def log_crawl(link):
 	r = requests.get(link)
 	page = r.content
@@ -51,7 +76,4 @@ def log_crawl(link):
 
 	return hiring
 
-'''
-for a in allLinks:
-	print "URL:\t", a['href']
-'''
+
