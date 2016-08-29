@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 import re
 
-def wall_crawl(link):
+totalItems = 0 
+
+def findCityPostings(link, city):
 	r = requests.get(link)
 	page = r.content
 	soup = BeautifulSoup(page, "html.parser")
@@ -15,7 +17,7 @@ def wall_crawl(link):
 
 	for post in postings: 
 		re1='.*?'	# Non-greedy match on filler
-		re2='(Toronto)'	# Word 1
+		re2='('+city+')'	# Word 1
 
 		rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
 		m = rg.search(post)
@@ -24,36 +26,14 @@ def wall_crawl(link):
 			#posts.append(m.group(1))
 			posts.append(post)
 
-	print "total items: ", len(posts)
+	global totalItems
+	totalItems += len(posts)
+	#print "total items: ", len(posts)
 
 	return posts
 
-def tree_crawl(link):
-	r = requests.get(link)
-	page = r.content
-	soup = BeautifulSoup(page, "html.parser")
-
-	allComments = soup.findAll('td', {'class':'default'})
-
-	postings = [comments for comments in allComments]
-	posts = []
-
-	for post in postings: 
-		re1='.*?'	# Non-greedy match on filler
-		re2='(Toronto)'	# Word 1
-
-		rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
-		m = rg.search(post)
-
-		if m:
-			#posts.append(m.group(1))
-			posts.append(post)
-
-	print "total items: ", len(posts)
-
-	return posts
-
-def log_crawl(link):
+def findMonthPostings():
+	link = "https://news.ycombinator.com/submitted?id=whoishiring"
 	r = requests.get(link)
 	page = r.content
 	soup = BeautifulSoup(page, "html.parser")
