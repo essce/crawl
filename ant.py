@@ -31,7 +31,7 @@ def getMonthlyPostings(filename, city):
 	print "See %s for selected postings" % filename
 
 if __name__ == "__main__":
-	textfile = "stdout.txt"
-	city = "Toronto"
+	city = raw_input('Enter a city name: ')
+	textfile = city + ".txt"
 	getMonthlyPostings(textfile, city)
 #	getIndividualPostings(textfile, city)
